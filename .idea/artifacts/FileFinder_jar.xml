@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="FileFinder:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/FileFinder_jar</output-path>
+    <root id="archive" name="FileFinder.jar">
+      <element id="module-output" name="FileFinder" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/FileMaster.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/Desktop/FreshUI.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
