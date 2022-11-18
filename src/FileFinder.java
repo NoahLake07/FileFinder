@@ -1,18 +1,15 @@
 import FFM.DirectorySearch;
-import FFM.FileMaster;
 import acm.graphics.GImage;
 import freshui.FreshUI;
 import freshui.graphics.FRect;
 import freshui.gui.Header;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.time.LocalTime;
 
-public class Main extends FreshUI {
+public class FileFinder extends FreshUI {
 
     GImage chooseDirBtn, chooseOutputLocation, startSearchBtn, searchSettingsBtn;
     Header programHeader;
@@ -23,7 +20,7 @@ public class Main extends FreshUI {
 
     JLabel chosenDirectoryLabel = new JLabel("No Search Directory Selected.");
     JLabel searchDetailsHeader = new JLabel("Deep Disk Search");
-    JLabel chooseDirectory = new JLabel("Please select a directory.");
+    JLabel searchStatus = new JLabel("Please select a directory.");
     JLabel chosenOutputLocation = new JLabel("Search Result File Location: NO CHOSEN OUTPUT LOCATION");
 
     boolean mouseOverStart;
@@ -37,13 +34,13 @@ public class Main extends FreshUI {
 
         @Override
         public void mouseEntered(MouseEvent e) {
-            chooseDirBtn.setImage("/Users/NL21320/Documents/Programming Projects/FileFinder/imagebtn/chooseDirectory-hover.png");
+            chooseDirBtn.setImage("imagebtn/chooseDirectory-hover.png");
             chooseDirBtn.scale(btnScaleFactor);
         }
 
         @Override
         public void mouseExited(MouseEvent e) {
-            chooseDirBtn.setImage("/Users/NL21320/Documents/Programming Projects/FileFinder/imagebtn/chooseDirectory.png");
+            chooseDirBtn.setImage("imagebtn/chooseDirectory.png");
             chooseDirBtn.scale(btnScaleFactor);
         }
     };
@@ -51,24 +48,27 @@ public class Main extends FreshUI {
 
         @Override
         public void mouseClicked(MouseEvent e) {
-            setChooseOutputLocation();
+            setOutputLocation();
         }
 
         @Override
         public void mouseEntered(MouseEvent e) {
-            chooseOutputLocation.setImage("/Users/NL21320/Documents/Programming Projects/FileFinder/imagebtn/chooseOutput-hover.png");
+            chooseOutputLocation.setImage("imagebtn/chooseOutput-hover.png");
             chooseOutputLocation.scale(btnScaleFactor);
         }
 
         @Override
         public void mouseExited(MouseEvent e) {
-            chooseOutputLocation.setImage("/Users/NL21320/Documents/Programming Projects/FileFinder/imagebtn/chooseOutput.png");
+            chooseOutputLocation.setImage("imagebtn/chooseOutput.png");
             chooseOutputLocation.scale(btnScaleFactor);
         }
     };
     MouseAdapter startMs = new MouseAdapter() {
         @Override
         public void mouseClicked(MouseEvent e) {
+            searchStatus.setText("Searching...");
+            searchStatus.setForeground(new Color(190, 112, 6));
+            searchStatus.setVisible(true);
             beginSearch();
             updateStartBtnLoc();
 
@@ -77,7 +77,7 @@ public class Main extends FreshUI {
         @Override
         public void mouseEntered(MouseEvent e) {
             mouseOverStart = true;
-            startSearchBtn.setImage("/Users/NL21320/Documents/Programming Projects/FileFinder/imagebtn/startSearch-hover.png");
+            startSearchBtn.setImage("imagebtn/startSearch-hover.png");
             startSearchBtn.scale(startScaleFactor);
             updateStartBtnLoc();
         }
@@ -85,7 +85,7 @@ public class Main extends FreshUI {
         @Override
         public void mouseExited(MouseEvent e) {
             mouseOverStart = false;
-            startSearchBtn.setImage("/Users/NL21320/Documents/Programming Projects/FileFinder/imagebtn/startSearch.png");
+            startSearchBtn.setImage("imagebtn/startSearch.png");
             startSearchBtn.scale(startScaleFactor);
             updateStartBtnLoc();
         }
@@ -98,13 +98,13 @@ public class Main extends FreshUI {
 
         @Override
         public void mouseEntered(MouseEvent e) {
-            searchSettingsBtn.setImage("/Users/NL21320/Documents/Programming Projects/FileFinder/imagebtn/searchSettings-hover.png");
+            searchSettingsBtn.setImage("imagebtn/searchSettings-hover.png");
             searchSettingsBtn.scale(btnScaleFactor);
         }
 
         @Override
         public void mouseExited(MouseEvent e) {
-            searchSettingsBtn.setImage("/Users/NL21320/Documents/Programming Projects/FileFinder/imagebtn/searchSettings.png");
+            searchSettingsBtn.setImage("imagebtn/searchSettings.png");
             searchSettingsBtn.scale(btnScaleFactor);
         }
     };
@@ -118,6 +118,9 @@ public class Main extends FreshUI {
         createButtons();
         createLabels();
         createContainers();
+
+        chosenDir = new File("/Volumes/WJ0426/Movies/");
+        updateLabels();
 
     }
 
@@ -134,10 +137,10 @@ public class Main extends FreshUI {
     }
 
     private void createButtons(){
-        chooseDirBtn = new GImage("/Users/NL21320/Documents/Programming Projects/FileFinder/imagebtn/chooseDirectory.png");
-        chooseOutputLocation = new GImage("/Users/NL21320/Documents/Programming Projects/FileFinder/imagebtn/chooseOutput.png");
-        startSearchBtn = new GImage("/Users/NL21320/Documents/Programming Projects/FileFinder/imagebtn/startSearch.png");
-        searchSettingsBtn = new GImage("/Users/NL21320/Documents/Programming Projects/FileFinder/imagebtn/searchSettings.png");
+        chooseDirBtn = new GImage("imagebtn/chooseDirectory.png");
+        chooseOutputLocation = new GImage("imagebtn/chooseOutput.png");
+        startSearchBtn = new GImage("imagebtn/startSearch.png");
+        searchSettingsBtn = new GImage("imagebtn/searchSettings.png");
 
         chooseDirBtn.scale(btnScaleFactor);
         chooseOutputLocation.scale(btnScaleFactor);
@@ -173,14 +176,15 @@ public class Main extends FreshUI {
         chosenOutputLocation.setVerticalAlignment(SwingConstants.CENTER);
 
         // organizational labels
-        add(chooseDirectory, startSearchBtn.getX(), startSearchBtn.getY() + startSearchBtn.getHeight() + startSearchBtn.getHeight()/5);
+        add(searchStatus, startSearchBtn.getX(), startSearchBtn.getY() + startSearchBtn.getHeight() + startSearchBtn.getHeight()/5);
         add(searchDetailsHeader, headerX, programHeader.getHeight() + programHeader.getHeight()/4);
 
         // info labels
         add(chosenDirectoryLabel, searchLabelX, searchDetailsHeader.getY() + (1*(getWidth()/10)));
         add(chosenOutputLocation, searchLabelX, searchDetailsHeader.getY() + (2*(getWidth()/10)));
 
-        chooseDirectory.setVisible(false);
+        searchStatus.setVisible(false);
+        searchStatus.setSize(500,20);
 
         updateLabels();
     }
@@ -217,7 +221,7 @@ public class Main extends FreshUI {
         updateLabels();
     }
 
-    private void setChooseOutputLocation(){
+    private void setOutputLocation(){
         UIManager.put("FileChooser.saveButtonText","Select Location");
         UIManager.put("FileChooser.fileNameLabelText","File Name");
         JFileChooser fileChooser = new JFileChooser();
@@ -228,20 +232,56 @@ public class Main extends FreshUI {
         int result = fileChooser.showSaveDialog(this);
 
         if (result == 0) {
+
+            if(fileChooser.getSelectedFile().isDirectory()){
+                File selectedFile = new File(fileChooser.getSelectedFile().getPath() + "/Search Results.txt/");
+            } else {
+                if (fileChooser.getSelectedFile().getPath().contains(".txt")) {
+                    File selectedFile = new File(fileChooser.getSelectedFile().getPath());
+                } else {
+                    File selectedFile = new File(fileChooser.getSelectedFile().getPath() + "/.txt/");
+                }
+            }
+
             File selectedFile = new File(fileChooser.getSelectedFile().getPath());
-            System.out.println(selectedFile.getPath());
+
             chosenOutput = selectedFile;
         }
+
         updateLabels();
     }
 
     private void beginSearch(){
+
         if(!(chosenDir==null || chosenOutput==null)) {
+
+            System.out.println("STARTED SEARCH...");
             DirectorySearch.searchDirectory(chosenDir.getPath(), chosenOutput.getPath());
-            chooseDirectory.setVisible(false);
+            System.out.println("FINISHED SEARCH.");
+
+            searchStatus.setText("Search Complete.");
+            searchStatus.setForeground(new Color(9, 169, 33));
+            searchStatus.setVisible(true);
+
+        } else if((chosenDir==null) && !(chosenOutput==null)) {
+            searchStatus.setText("Select a directory to search.");
+            searchStatus.setForeground(Color.RED);
+            searchStatus.setVisible(true);
+
+        } else if((chosenOutput==null) && !(chosenDir==null)){
+            searchStatus.setText("Select a search result location.");
+            searchStatus.setForeground(Color.RED);
+            searchStatus.setVisible(true);
+
+        } else if (((chosenOutput==null) && (chosenDir==null))){
+            searchStatus.setText("Select a search directory and output location.");
+            searchStatus.setForeground(Color.RED);
+            searchStatus.setVisible(true);
+
         } else {
-            chooseDirectory.setForeground(Color.RED);
-            chooseDirectory.setVisible(true);
+            searchStatus.setText("ERROR! Check settings.");
+            searchStatus.setForeground(Color.RED);
+            searchStatus.setVisible(true);
         }
 
     }
@@ -251,6 +291,6 @@ public class Main extends FreshUI {
     }
 
     public static void main(String[] args) {
-        new Main().start();
+        new FileFinder().start();
     }
 }
