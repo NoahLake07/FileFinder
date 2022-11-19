@@ -119,7 +119,7 @@ public class FileFinder extends FreshUI {
         createLabels();
         createContainers();
 
-        chosenDir = new File("/Volumes/WJ0426/Movies/");
+        chosenDir = new File("/Volumes/LF-STUDIO");
         updateLabels();
 
     }
